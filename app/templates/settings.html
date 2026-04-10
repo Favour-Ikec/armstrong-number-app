@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Settings - Armstrong Number App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <h2>Account Settings</h2>
+
+        <form method="POST" class="mb-4">
+            <input type="hidden" name="action" value="update">
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ current_user.name }}">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}">
+            </div>
+            <div class="mb-3">
+                <label for="contact_number" class="form-label">Contact Number</label>
+                <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ current_user.contact_number }}">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea class="form-control" id="address" name="address" rows="2">{{ current_user.address or '' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="new_password" class="form-label">New Password (leave blank to keep current)</label>
+                <input type="password" class="form-control" id="new_password" name="new_password">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+
+        <hr>
+
+        <div class="mt-4">
+            <h5 class="text-danger">Danger Zone</h5>
+            <p>Permanently delete your account and all associated data.</p>
+            <form method="POST" onsubmit="return confirm('Are you sure? This cannot be undone.');">
+                <input type="hidden" name="action" value="delete">
+                <button type="submit" class="btn btn-danger">Delete Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

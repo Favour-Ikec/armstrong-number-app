@@ -1,0 +1,39 @@
+/* Base styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.container.mt-4 {
+    flex: 1;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #4a6cf7;
+    border-color: #4a6cf7;
+}
+
+.btn-primary:hover {
+    background-color: #3a5ce5;
+    border-color: #3a5ce5;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Table */
+.table th {
+    background-color: #f1f3f5;
+}

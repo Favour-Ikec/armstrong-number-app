@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}My Attempts - Armstrong Number App{% endblock %}
+
+{% block content %}
+<h2>My Attempts</h2>
+<p class="text-muted">Your history of Armstrong number checks.</p>
+
+{% if attempts %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Input</th>
+                <th>Result</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in attempts %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ attempt.input_type | capitalize }}</td>
+                <td>{{ attempt.input_value }}</td>
+                <td>{{ attempt.result }}</td>
+                <td>{{ attempt.timestamp.strftime('%d %b %Y, %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>You haven't made any checks yet. <a href="{{ url_for('main.check') }}">Try one now!</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Range Check - Armstrong Number App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <h2>Find Armstrong Numbers in a Range</h2>
+        <p class="text-muted">Enter a minimum and maximum to find all Armstrong numbers between them.</p>
+
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="min" class="form-label">Minimum</label>
+                    <input type="number" class="form-control" id="min" name="min" min="0" value="{{ min_val }}" required>
+                </div>
+                <div class="col">
+                    <label for="max" class="form-label">Maximum</label>
+                    <input type="number" class="form-control" id="max" name="max" min="1" value="{{ max_val }}" required>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="{{ url_for('main.range_check') }}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+
+        {% if results %}
+        <div class="alert alert-info mt-4">
+            <strong>Found {{ results.count }} Armstrong number{{ 's' if results.count != 1 else '' }}:</strong>
+            {% if results.numbers %}
+            <p class="mt-2 mb-0">{{ results.numbers | join(', ') }}</p>
+            {% else %}
+            <p class="mt-2 mb-0">No Armstrong numbers found in this range.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

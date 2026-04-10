@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Check Number - Armstrong Number App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <h2>Check a Number</h2>
+        <p class="text-muted">Enter a number to see if it's an Armstrong number.</p>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label for="number" class="form-label">Enter a number</label>
+                <input type="number" class="form-control" id="number" name="number" min="0" value="{{ number }}" required>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Check</button>
+                <a href="{{ url_for('main.check') }}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+
+        {% if result %}
+        <div class="alert alert-info mt-4">
+            <strong>Result:</strong> {{ result }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
