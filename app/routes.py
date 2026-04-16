@@ -108,6 +108,9 @@ def settings():
 
             new_password = request.form.get('new_password', '')
             if new_password:
+                if current_user.check_password(new_password):
+                    flash('New password cannot be the same as the current password.', 'error')
+                    return redirect(url_for('main.settings'))
                 current_user.set_password(new_password)
 
             db.session.commit()
