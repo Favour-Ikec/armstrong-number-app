@@ -4,8 +4,8 @@
 {% block content %}
 <!-- Hero Section -->
 <div class="hero-section text-center mb-5 animate__animated animate__fadeIn">
-    <h1 class="fw-bold">Armstrong Number Calculator</h1>
-    <p class="lead">
+    <h1 class="fw-bold mb-3">Armstrong Number Calculator</h1>
+    <p class="lead mb-0">
         Explore the beauty of mathematics through narcissistic numbers.
     </p>
 
@@ -19,7 +19,7 @@
         </a>
         {% else %}
         <a href="{{ url_for('main.register') }}" class="btn btn-light btn-lg">
-            <i class="fas fa-user-plus me-2"></i>Register
+            <i class="fas fa-user-plus me-2"></i>Get Started
         </a>
         <a href="{{ url_for('main.login') }}" class="btn btn-warning btn-lg">
             <i class="fas fa-sign-in-alt me-2"></i>Login
@@ -28,56 +28,131 @@
     </div>
 </div>
 
-<!-- Armstrong Explanation -->
-<div class="section-soft mb-5">
-    <h2 class="fw-bold">
+<!-- Hero Image -->
+<div class="text-center mb-4">
+    <img src="{{ url_for('static', filename='images/armstrong-hero.svg') }}"
+         alt="Armstrong Number 153 = 1³ + 5³ + 3³"
+         class="img-fluid" style="max-width: 560px; border-radius: 20px;">
+</div>
+
+<!-- What is Armstrong -->
+<div class="section-soft mb-4 animate__animated animate__fadeInUp">
+    <h2 class="fw-bold mb-3">
         <i class="fas fa-lightbulb text-warning me-2"></i>
         What is an Armstrong Number?
     </h2>
     <p>
-        An <strong>Armstrong number</strong> is a number that equals the sum of its digits
-        raised to the power of the number of digits.
+        An <strong>Armstrong number</strong> (also called a narcissistic number) is a number
+        that equals the sum of its own digits, each raised to the power of the total number of digits.
     </p>
-    <ul>
-        <li><strong>153</strong> = 1³ + 5³ + 3³</li>
-        <li><strong>370</strong> = 3³ + 7³ + 0³</li>
-        <li><strong>1634</strong> = 1⁴ + 6⁴ + 3⁴ + 4⁴</li>
-    </ul>
+
+    <!-- Formula Diagram -->
+    <div class="text-center my-4">
+        <img src="{{ url_for('static', filename='images/armstrong-formula.svg') }}"
+             alt="The Armstrong Formula with examples"
+             class="img-fluid" style="max-width: 500px; border-radius: 16px;">
+    </div>
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-4">
+            <div class="card-soft p-3 text-center">
+                <h3 class="fw-bold" style="color: var(--primary);">153</h3>
+                <p class="mb-0 text-muted">1³ + 5³ + 3³ = <strong>153</strong></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-soft p-3 text-center">
+                <h3 class="fw-bold" style="color: var(--accent);">370</h3>
+                <p class="mb-0 text-muted">3³ + 7³ + 0³ = <strong>370</strong></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-soft p-3 text-center">
+                <h3 class="fw-bold" style="color: var(--secondary);">1634</h3>
+                <p class="mb-0 text-muted">1⁴ + 6⁴ + 3⁴ + 4⁴ = <strong>1634</strong></p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Features -->
-<div class="row g-4 text-center mb-5">
+<div class="row g-4 text-center mb-4">
     <div class="col-md-4">
         <div class="card card-soft p-4 h-100">
-            <i class="fas fa-calculator fa-2x mb-3 text-primary"></i>
-            <h5>Instant Calculation</h5>
-            <p>Quickly determine whether a number is an Armstrong number.</p>
+            <div class="mb-3">
+                <i class="fas fa-calculator fa-2x text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Instant Check</h5>
+            <p class="text-muted mb-0">Enter any number and instantly find out if it's an Armstrong number.</p>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card card-soft p-4 h-100">
-            <i class="fas fa-list-ol fa-2x mb-3 text-primary"></i>
-            <h5>Range Search</h5>
-            <p>Discover all Armstrong numbers within a selected range.</p>
+            <div class="mb-3">
+                <i class="fas fa-search fa-2x text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Range Search</h5>
+            <p class="text-muted mb-0">Discover all Armstrong numbers within any range up to 1,000,000.</p>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card card-soft p-4 h-100">
-            <i class="fas fa-history fa-2x mb-3 text-primary"></i>
-            <h5>Track Attempts</h5>
-            <p>View your calculation history anytime.</p>
+            <div class="mb-3">
+                <i class="fas fa-clock-rotate-left fa-2x text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Track History</h5>
+            <p class="text-muted mb-0">All your calculations are saved so you can review them anytime.</p>
         </div>
     </div>
 </div>
 
 <!-- How It Works -->
-<div class="section-soft">
-    <h2 class="fw-bold">How It Works</h2>
-    <ol class="mb-0">
-        <li>Register an account.</li>
-        <li>Check a single number.</li>
-        <li>Search within a range.</li>
-        <li>View your attempt history.</li>
-    </ol>
+<div class="section-soft animate__animated animate__fadeInUp">
+    <h2 class="fw-bold mb-3">
+        <i class="fas fa-rocket me-2" style="color: var(--accent);"></i>
+        How It Works
+    </h2>
+
+    <!-- Process Diagram -->
+    <div class="text-center mb-4">
+        <img src="{{ url_for('static', filename='images/armstrong-process.svg') }}"
+             alt="Armstrong Number verification process: Split, Power, Sum"
+             class="img-fluid" style="max-width: 500px; border-radius: 16px;">
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-3 col-6">
+            <div class="text-center p-3">
+                <div class="mb-2" style="background: var(--primary-light); width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;">
+                    <span class="fw-bold" style="color: var(--primary); font-size: 1.2rem;">1</span>
+                </div>
+                <p class="fw-600 mb-0 mt-2">Create an account</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="text-center p-3">
+                <div class="mb-2" style="background: var(--accent-light); width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;">
+                    <span class="fw-bold" style="color: var(--accent); font-size: 1.2rem;">2</span>
+                </div>
+                <p class="fw-600 mb-0 mt-2">Check a number</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="text-center p-3">
+                <div class="mb-2" style="background: rgba(254, 241, 134, 0.3); width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;">
+                    <span class="fw-bold" style="color: var(--secondary); font-size: 1.2rem;">3</span>
+                </div>
+                <p class="fw-600 mb-0 mt-2">Search a range</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="text-center p-3">
+                <div class="mb-2" style="background: var(--secondary-light); width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;">
+                    <span class="fw-bold" style="color: var(--secondary); font-size: 1.2rem;">4</span>
+                </div>
+                <p class="fw-600 mb-0 mt-2">View your history</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

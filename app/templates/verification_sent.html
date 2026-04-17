@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Verify Your Email - Armstrong Number App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="text-center mb-4">
+            <div style="background: linear-gradient(135deg, var(--highlight), #fde68a); width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="fas fa-envelope-open-text fa-2x" style="color: var(--secondary);"></i>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4 text-center">
+                <h2 class="fw-bold mb-3" style="color: var(--primary);">Check Your Email</h2>
+                <p class="lead">
+                    We've sent a verification link to
+                    {% if email %}<strong style="color: var(--accent);">{{ email }}</strong>{% else %}your email address{% endif %}.
+                </p>
+                <p class="text-muted">
+                    Click the link in the email to activate your account.
+                    The link will expire in <strong>1 hour</strong>.
+                </p>
+
+                <div class="p-3 mt-3 mb-3" style="background: var(--primary-light); border-radius: var(--radius-sm);">
+                    <p class="mb-0 small">
+                        <i class="fas fa-info-circle me-1" style="color: var(--primary);"></i>
+                        <strong>Can't find it?</strong> Check your spam/junk folder.
+                    </p>
+                </div>
+
+                <hr class="my-4">
+
+                <p class="mb-3 fw-bold" style="color: var(--primary);">Need a new link?</p>
+                <form method="POST" action="{{ url_for('main.resend_verification') }}"
+                      class="d-flex flex-column align-items-center gap-2">
+                    <input type="email" class="form-control text-center" style="max-width: 320px;"
+                           name="email" value="{{ email }}" placeholder="your@email.com" required>
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-redo me-2"></i>Resend Verification Email
+                    </button>
+                </form>
+
+                <p class="mt-4 mb-0">
+                    <a href="{{ url_for('main.login') }}" style="color: var(--accent);">
+                        <i class="fas fa-arrow-left me-1"></i> Back to login
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
