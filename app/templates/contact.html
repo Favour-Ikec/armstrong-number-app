@@ -1,19 +1,67 @@
 {% extends "base.html" %}
-{% block title %}Contact Us - Armstrong Number App{% endblock %}
+{% block title %}Contact Us{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 mx-auto">
-        <h2>Contact Us</h2>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Lehman Educational Services</h5>
-                <p><strong>Email:</strong> info@lehmaneducation.com</p>
-                <p><strong>Phone:</strong> +234 800 123 4567</p>
-                <p><strong>Address:</strong> 15 Education Avenue, Lagos, Nigeria</p>
-                <p class="text-muted mt-3">For any enquiries regarding the Armstrong Number application, feel free to reach out to us using the details above.</p>
-            </div>
+<div class="contact-wrapper">
+
+    <!-- Back -->
+    <div class="back-btn">← Back</div>
+
+    <!-- Header -->
+    <div class="text-center">
+        <div class="badge">💬 Get In Touch</div>
+        <h2 class="title">Contact Us</h2>
+        <p class="subtitle">
+            Questions, feedback, or suggestions? We're here to help!
+        </p>
+    </div>
+
+    <!-- Email Card -->
+    <div class="card email-card">
+        <div class="icon">✉️</div>
+        <div>
+            <h5>Email Support</h5>
+            <a href="mailto:info@lehmaneducation.com">
+                info@lehmaneducation.com
+            </a>
         </div>
     </div>
+
+    <!-- Response Time -->
+    <div class="card response-card">
+        <div class="icon">⏱️</div>
+        <div>
+            <h5>Response Time</h5>
+            <p>24–48 hours for inquiries</p>
+        </div>
+    </div>
+
+    <!-- Info Boxes -->
+    <div class="info-grid">
+        <div class="info-box">
+            🇳🇬 Nigeria
+        </div>
+
+        <div class="info-box highlight">
+            <strong>24/7</strong><br>
+            Available
+        </div>
+    </div>
+
+    <!-- Team -->
+    <div class="team">
+        <h5>Lehman Educational Services</h5>
+        <p>Based in Lagos, Nigeria</p>
+    </div>
+
+    <hr>
+
+    <!-- General Support -->
+    <div class="support-box">
+        <div class="icon">📨</div>
+        <h5>General Support</h5>
+        <p>Questions about the application</p>
+    </div>
+
 </div>
 {% endblock %}
