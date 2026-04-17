@@ -1,30 +1,62 @@
 {% extends "base.html" %}
-{% block title %}Feedback - Armstrong Number App{% endblock %}
+{% block title %}Feedback{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 mx-auto">
-        <h2>Submit Feedback</h2>
-        <p class="text-muted">Let us know what you think of the app.</p>
+<div class="contact-wrapper">
+
+    <!-- Header -->
+    <div class="text-center">
+        <div class="custom-badge">💬 Feedback</div>
+        <h2 class="title">Submit Feedback</h2>
+        <p class="subtitle">Let us know what you think of the app.</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card feedback-card">
 
         <form method="POST">
+
+            <!-- Rating -->
             <div class="mb-3">
                 <label for="rating" class="form-label">Rating</label>
-                <select class="form-select" id="rating" name="rating" required>
+                <select class="form-select custom-input" id="rating" name="rating" required>
                     <option value="">Select a rating</option>
-                    <option value="5">5 - Excellent</option>
-                    <option value="4">4 - Good</option>
-                    <option value="3">3 - Average</option>
-                    <option value="2">2 - Below Average</option>
-                    <option value="1">1 - Poor</option>
+                    <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ - Good</option>
+                    <option value="3">⭐⭐⭐ - Average</option>
+                    <option value="2">⭐⭐ - Below Average</option>
+                    <option value="1">⭐ - Poor</option>
                 </select>
             </div>
+
+            <!-- Message -->
             <div class="mb-3">
                 <label for="message" class="form-label">Your Feedback</label>
-                <textarea class="form-control" id="message" name="message" rows="5" placeholder="Tell us what you liked or what we can improve..." required></textarea>
+                <textarea 
+                    class="form-control custom-input" 
+                    id="message" 
+                    name="message" 
+                    rows="5"
+                    placeholder="Tell us what you liked or what we can improve..." 
+                    required>
+                </textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+
+            <!-- Button -->
+            <button type="submit" class="btn-custom w-100">
+                Submit Feedback
+            </button>
+
         </form>
+
+        <!-- Success -->
+        {% if message %}
+            <div class="success-message mt-3">
+                {{ message }}
+            </div>
+        {% endif %}
+
     </div>
+
 </div>
 {% endblock %}
