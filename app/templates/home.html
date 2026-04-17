@@ -2,47 +2,82 @@
 {% block title %}Home - Armstrong Number App{% endblock %}
 
 {% block content %}
-<div class="text-center mb-5">
-    <h1 class="display-4">Armstrong Number Checker</h1>
-    <p class="lead text-muted">Discover the magic behind narcissistic numbers</p>
+<!-- Hero Section -->
+<div class="hero-section text-center mb-5 animate__animated animate__fadeIn">
+    <h1 class="fw-bold">Armstrong Number Calculator</h1>
+    <p class="lead">
+        Explore the beauty of mathematics through narcissistic numbers.
+    </p>
+
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('main.check') }}" class="btn btn-light btn-lg">
+            <i class="fas fa-hashtag me-2"></i>Check a Number
+        </a>
+        <a href="{{ url_for('main.range_check') }}" class="btn btn-warning btn-lg">
+            <i class="fas fa-list-ol me-2"></i>Search a Range
+        </a>
+        {% else %}
+        <a href="{{ url_for('main.register') }}" class="btn btn-light btn-lg">
+            <i class="fas fa-user-plus me-2"></i>Register
+        </a>
+        <a href="{{ url_for('main.login') }}" class="btn btn-warning btn-lg">
+            <i class="fas fa-sign-in-alt me-2"></i>Login
+        </a>
+        {% endif %}
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-8 mx-auto">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title h4">What is an Armstrong Number?</h2>
-                <p>An Armstrong number (also called a <strong>narcissistic number</strong>) is a number that equals the sum of its own digits, each raised to the power of the total number of digits.</p>
-                <p>For example:</p>
-                <ul>
-                    <li><strong>153</strong> = 1<sup>3</sup> + 5<sup>3</sup> + 3<sup>3</sup> = 1 + 125 + 27 = <strong>153</strong></li>
-                    <li><strong>370</strong> = 3<sup>3</sup> + 7<sup>3</sup> + 0<sup>3</sup> = 27 + 343 + 0 = <strong>370</strong></li>
-                    <li><strong>1634</strong> = 1<sup>4</sup> + 6<sup>4</sup> + 3<sup>4</sup> + 4<sup>4</sup> = 1 + 1296 + 81 + 256 = <strong>1634</strong></li>
-                </ul>
-            </div>
-        </div>
+<!-- Armstrong Explanation -->
+<div class="section-soft mb-5">
+    <h2 class="fw-bold">
+        <i class="fas fa-lightbulb text-warning me-2"></i>
+        What is an Armstrong Number?
+    </h2>
+    <p>
+        An <strong>Armstrong number</strong> is a number that equals the sum of its digits
+        raised to the power of the number of digits.
+    </p>
+    <ul>
+        <li><strong>153</strong> = 1³ + 5³ + 3³</li>
+        <li><strong>370</strong> = 3³ + 7³ + 0³</li>
+        <li><strong>1634</strong> = 1⁴ + 6⁴ + 3⁴ + 4⁴</li>
+    </ul>
+</div>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title h4">How It Works</h2>
-                <ol>
-                    <li><strong>Register</strong> an account to get started</li>
-                    <li><strong>Check a single number</strong> to see if it's an Armstrong number</li>
-                    <li><strong>Search a range</strong> to find all Armstrong numbers between two values</li>
-                    <li><strong>View your history</strong> of all past checks</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="text-center">
-            {% if current_user.is_authenticated %}
-            <a href="{{ url_for('main.check') }}" class="btn btn-primary btn-lg me-2">Check a Number</a>
-            <a href="{{ url_for('main.range_check') }}" class="btn btn-outline-primary btn-lg">Search a Range</a>
-            {% else %}
-            <a href="{{ url_for('main.register') }}" class="btn btn-primary btn-lg me-2">Get Started</a>
-            <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary btn-lg">Log In</a>
-            {% endif %}
+<!-- Features -->
+<div class="row g-4 text-center mb-5">
+    <div class="col-md-4">
+        <div class="card card-soft p-4 h-100">
+            <i class="fas fa-calculator fa-2x mb-3 text-primary"></i>
+            <h5>Instant Calculation</h5>
+            <p>Quickly determine whether a number is an Armstrong number.</p>
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="card card-soft p-4 h-100">
+            <i class="fas fa-list-ol fa-2x mb-3 text-primary"></i>
+            <h5>Range Search</h5>
+            <p>Discover all Armstrong numbers within a selected range.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-soft p-4 h-100">
+            <i class="fas fa-history fa-2x mb-3 text-primary"></i>
+            <h5>Track Attempts</h5>
+            <p>View your calculation history anytime.</p>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="section-soft">
+    <h2 class="fw-bold">How It Works</h2>
+    <ol class="mb-0">
+        <li>Register an account.</li>
+        <li>Check a single number.</li>
+        <li>Search within a range.</li>
+        <li>View your attempt history.</li>
+    </ol>
 </div>
 {% endblock %}
