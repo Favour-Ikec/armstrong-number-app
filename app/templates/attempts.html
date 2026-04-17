@@ -3,41 +3,65 @@
 
 {% block content %}
 <div class="section-soft animate__animated animate__fadeInUp">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1">
-                <i class="fas fa-history me-2 text-primary"></i>My Attempts
+            <h2 class="fw-bold mb-1" style="color: var(--primary);">
+                <i class="fas fa-history me-2" style="color: var(--accent);"></i>Calculation History
             </h2>
             <p class="text-muted mb-0">
-                Your history of Armstrong number checks.
+                Your complete log of Armstrong number checks.
             </p>
         </div>
+        {% if attempts %}
+        <div class="d-flex gap-2 mt-2 mt-md-0">
+            <a href="{{ url_for('main.export_attempts') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-file-csv me-1"></i> Export CSV
+            </a>
+            <a href="{{ url_for('main.check') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i> New Check
+            </a>
+            <a href="{{ url_for('main.range_check') }}" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-list-ol me-1"></i> Range
+            </a>
+        </div>
+        {% endif %}
     </div>
 
     {% if attempts %}
     <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        <table class="table table-hover align-middle mb-0">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Type</th>
+                    <th style="width: 50px;">#</th>
+                    <th style="width: 90px;">Type</th>
                     <th>Input</th>
                     <th>Result</th>
-                    <th>Date</th>
+                    <th style="width: 150px;">Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for attempt in attempts %}
                 <tr>
-                    <td>{{ loop.index + ((pagination.page - 1) * pagination.per_page) }}</td>
+                    <td class="fw-bold text-muted">
+                        {{ loop.index + ((pagination.page - 1) * pagination.per_page) }}
+                    </td>
                     <td>
+                        {% if attempt.input_type == 'single' %}
                         <span class="badge bg-primary">
-                            {{ attempt.input_type | capitalize }}
+                            <i class="fas fa-hashtag me-1"></i> Single
                         </span>
+                        {% else %}
+                        <span class="badge" style="background: linear-gradient(135deg, var(--secondary), var(--accent)) !important;">
+                            <i class="fas fa-list-ol me-1"></i> Range
+                        </span>
+                        {% endif %}
                     </td>
                     <td><strong>{{ attempt.input_value }}</strong></td>
-                    <td>{{ attempt.result }}</td>
-                    <td>{{ attempt.timestamp.strftime('%d %b %Y, %H:%M') }}</td>
+                    <td style="font-size: 0.9rem;">{{ attempt.result }}</td>
+                    <td class="text-muted" style="font-size: 0.85rem;">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ attempt.timestamp.strftime('%d %b %Y, %H:%M') }}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -47,11 +71,11 @@
     <!-- Pagination -->
     {% if pagination.pages > 1 %}
     <nav class="mt-4">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center mb-0">
             {% if pagination.has_prev %}
             <li class="page-item">
                 <a class="page-link" href="{{ url_for('main.attempts', page=pagination.prev_num) }}">
-                    Previous
+                    <i class="fas fa-chevron-left me-1"></i> Prev
                 </a>
             </li>
             {% endif %}
@@ -69,20 +93,25 @@
             {% if pagination.has_next %}
             <li class="page-item">
                 <a class="page-link" href="{{ url_for('main.attempts', page=pagination.next_num) }}">
-                    Next
+                    Next <i class="fas fa-chevron-right ms-1"></i>
                 </a>
             </li>
             {% endif %}
+
+
         </ul>
     </nav>
     {% endif %}
 
     {% else %}
-    <div class="alert alert-info shadow-sm mb-0">
-        <i class="fas fa-info-circle me-2"></i>
-        You haven't made any checks yet.
-        <a href="{{ url_for('main.check') }}" class="alert-link fw-semibold">
-            Try one now!
+    <div class="text-center py-5">
+        <div style="background: var(--primary-light); width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+            <i class="fas fa-search fa-2x" style="color: var(--primary);"></i>
+        </div>
+        <h5 class="fw-bold" style="color: var(--primary);">No checks yet</h5>
+        <p class="text-muted mb-3">Start by checking if a number is an Armstrong number!</p>
+        <a href="{{ url_for('main.check') }}" class="btn btn-primary">
+            <i class="fas fa-hashtag me-2"></i>Check a Number
         </a>
     </div>
     {% endif %}

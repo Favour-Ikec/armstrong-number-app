@@ -1,15 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Contact Us{% endblock %}
+{% block title %}Contact Us - Armstrong Number App{% endblock %}
 
 {% block content %}
 <div class="contact-wrapper">
 
     <!-- Back -->
-    <div class="back-btn">← Back</div>
+    <a href="{{ url_for('main.home') }}" class="back-btn">
+        <i class="fas fa-arrow-left me-1"></i> Back
+    </a>
 
     <!-- Header -->
     <div class="text-center">
-        <div class="badge">💬 Get In Touch</div>
+        <div class="custom-badge"><i class="fas fa-comments me-1"></i> Get In Touch</div>
         <h2 class="title">Contact Us</h2>
         <p class="subtitle">
             Questions, feedback, or suggestions? We're here to help!
@@ -18,10 +20,12 @@
 
     <!-- Email Card -->
     <div class="card email-card">
-        <div class="icon">✉️</div>
+        <div class="icon">
+            <i class="fas fa-envelope" style="color: var(--primary);"></i>
+        </div>
         <div>
-            <h5>Email Support</h5>
-            <a href="mailto:info@lehmaneducation.com">
+            <h5 class="mb-1">Email Support</h5>
+            <a href="mailto:info@lehmaneducation.com" style="color: var(--accent);">
                 info@lehmaneducation.com
             </a>
         </div>
@@ -29,20 +33,23 @@
 
     <!-- Response Time -->
     <div class="card response-card">
-        <div class="icon">⏱️</div>
+        <div class="icon">
+            <i class="fas fa-clock" style="color: var(--accent);"></i>
+        </div>
         <div>
-            <h5>Response Time</h5>
-            <p>24–48 hours for inquiries</p>
+            <h5 class="mb-1">Response Time</h5>
+            <p class="mb-0 text-muted">24–48 hours for inquiries</p>
         </div>
     </div>
 
     <!-- Info Boxes -->
     <div class="info-grid">
         <div class="info-box">
-            🇳🇬 Nigeria
+            <i class="fas fa-globe-africa mb-2" style="font-size: 1.5rem; color: var(--primary);"></i><br>
+            <strong>Nigeria</strong>
         </div>
-
         <div class="info-box highlight">
+            <i class="fas fa-headset mb-2" style="font-size: 1.5rem;"></i><br>
             <strong>24/7</strong><br>
             Available
         </div>
@@ -50,7 +57,7 @@
 
     <!-- Team -->
     <div class="team">
-        <h5>Lehman Educational Services</h5>
+        <h5><i class="fas fa-building me-2"></i>Lehman Educational Services</h5>
         <p>Based in Lagos, Nigeria</p>
     </div>
 
@@ -58,9 +65,9 @@
 
     <!-- General Support -->
     <div class="support-box">
-        <div class="icon">📨</div>
+        <i class="fas fa-paper-plane" style="font-size: 1.8rem; color: var(--primary);"></i>
         <h5>General Support</h5>
-        <p>Questions about the application</p>
+        <p>Questions about the Armstrong Number application</p>
     </div>
 
 </div>

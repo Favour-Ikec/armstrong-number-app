@@ -1,61 +1,55 @@
 {% extends "base.html" %}
-{% block title %}Feedback{% endblock %}
+{% block title %}Feedback - Armstrong Number App{% endblock %}
 
 {% block content %}
 <div class="contact-wrapper">
 
     <!-- Header -->
     <div class="text-center">
-        <div class="custom-badge">💬 Feedback</div>
-        <h2 class="title">Submit Feedback</h2>
-        <p class="subtitle">Let us know what you think of the app.</p>
+        <div class="custom-badge"><i class="fas fa-star me-1"></i> Feedback</div>
+        <h2 class="title">Share Your Thoughts</h2>
+        <p class="subtitle">We'd love to hear what you think about the app.</p>
     </div>
 
     <!-- Card -->
     <div class="card feedback-card">
-
         <form method="POST">
 
             <!-- Rating -->
             <div class="mb-3">
-                <label for="rating" class="form-label">Rating</label>
-                <select class="form-select custom-input" id="rating" name="rating" required>
+                <label for="rating" class="form-label fw-bold">
+                    <i class="fas fa-star me-1" style="color: var(--secondary);"></i> Your Rating
+                </label>
+                <select class="form-select" id="rating" name="rating" required>
                     <option value="">Select a rating</option>
-                    <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
-                    <option value="4">⭐⭐⭐⭐ - Good</option>
-                    <option value="3">⭐⭐⭐ - Average</option>
-                    <option value="2">⭐⭐ - Below Average</option>
-                    <option value="1">⭐ - Poor</option>
+                    <option value="5">&#11088;&#11088;&#11088;&#11088;&#11088; — Excellent</option>
+                    <option value="4">&#11088;&#11088;&#11088;&#11088; — Good</option>
+                    <option value="3">&#11088;&#11088;&#11088; — Average</option>
+                    <option value="2">&#11088;&#11088; — Below Average</option>
+                    <option value="1">&#11088; — Poor</option>
                 </select>
             </div>
 
             <!-- Message -->
-            <div class="mb-3">
-                <label for="message" class="form-label">Your Feedback</label>
-                <textarea 
-                    class="form-control custom-input" 
-                    id="message" 
-                    name="message" 
+            <div class="mb-4">
+                <label for="message" class="form-label fw-bold">
+                    <i class="fas fa-comment me-1" style="color: var(--accent);"></i> Your Feedback
+                </label>
+                <textarea
+                    class="form-control"
+                    id="message"
+                    name="message"
                     rows="5"
-                    placeholder="Tell us what you liked or what we can improve..." 
-                    required>
-                </textarea>
+                    placeholder="Tell us what you liked or what we can improve..."
+                    required></textarea>
             </div>
 
             <!-- Button -->
-            <button type="submit" class="btn-custom w-100">
-                Submit Feedback
+            <button type="submit" class="btn btn-primary w-100 py-2">
+                <i class="fas fa-paper-plane me-2"></i>Submit Feedback
             </button>
 
         </form>
-
-        <!-- Success -->
-        {% if message %}
-            <div class="success-message mt-3">
-                {{ message }}
-            </div>
-        {% endif %}
-
     </div>
 
 </div>

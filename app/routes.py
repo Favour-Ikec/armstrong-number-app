@@ -2,6 +2,16 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Attempt, Feedback
+import csv
+import io
+from flask import Response
+from sqlalchemy import func
+from app.email_utils import (
+    generate_token,
+    verify_token,
+    send_verification_email,
+    send_password_reset_email,
+)
 
 main = Blueprint('main', __name__)
 
@@ -52,8 +62,11 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash('Account created! You can now log in.', 'success')
-        return redirect(url_for('main.login'))
+        # Send verification email
+        send_verification_email(user)
+
+        flash('Account created! Please check your email to verify your account.', 'success')
+        return redirect(url_for('main.verification_sent', email=email))
 
     return render_template('register.html')
 
@@ -72,6 +85,14 @@ def login():
 
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
+            if not user.email_verified:
+                flash(
+                    'Please verify your email before logging in. '
+                    'Check your inbox, or request a new verification link below.',
+                    'error'
+                )
+                return redirect(url_for('main.verification_sent', email=user.email))
+
             login_user(user)
             flash('Logged in successfully!', 'success')
             next_page = request.args.get('next')
@@ -109,7 +130,7 @@ def settings():
             new_password = request.form.get('new_password', '')
             if new_password:
                 if current_user.check_password(new_password):
-                    flash('New password cannot be the same as the current password.', 'error')
+                    flash('New password cannot be the same as your old password.', 'error')
                     return redirect(url_for('main.settings'))
                 current_user.set_password(new_password)
 
@@ -260,3 +281,198 @@ def feedback():
             return redirect(url_for('main.feedback'))
 
     return render_template('feedback.html')
+
+
+# ──────────────────────────────────────
+# Email verification
+# ──────────────────────────────────────
+@main.route('/verification-sent')
+def verification_sent():
+    email = request.args.get('email', '')
+    return render_template('verification_sent.html', email=email)
+
+
+@main.route('/verify/<token>')
+def verify_email(token):
+    email = verify_token(token, salt='email-verify', max_age=3600)
+    if not email:
+        flash('Verification link is invalid or has expired. Please request a new one.', 'error')
+        return redirect(url_for('main.login'))
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash('No account found for this email.', 'error')
+        return redirect(url_for('main.register'))
+
+    if user.email_verified:
+        flash('Your email is already verified. Please log in.', 'success')
+        return redirect(url_for('main.login'))
+
+    user.email_verified = True
+    db.session.commit()
+    flash('Email verified successfully! You can now log in.', 'success')
+    return redirect(url_for('main.login'))
+
+
+@main.route('/resend-verification', methods=['POST'])
+def resend_verification():
+    email = request.form.get('email', '').strip()
+    user = User.query.filter_by(email=email).first()
+
+    # Always show the same message (don't leak whether an email is registered)
+    if user and not user.email_verified:
+        send_verification_email(user)
+
+    flash('If an unverified account exists for that email, a new verification link has been sent.', 'success')
+    return redirect(url_for('main.verification_sent', email=email))
+
+
+# ──────────────────────────────────────
+# Forgot password / Reset password
+# ──────────────────────────────────────
+@main.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
+
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        user = User.query.filter_by(email=email).first()
+
+        # Always respond the same way to prevent email enumeration
+        if user:
+            send_password_reset_email(user)
+
+        flash(
+            'If an account exists for that email, a password reset link has been sent. '
+            'The link expires in 1 hour.',
+            'success'
+        )
+        return redirect(url_for('main.login'))
+
+    return render_template('forgot_password.html')
+
+
+@main.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
+
+    email = verify_token(token, salt='password-reset', max_age=3600)
+    if not email:
+        flash('Reset link is invalid or has expired. Please request a new one.', 'error')
+        return redirect(url_for('main.forgot_password'))
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash('No account found for this email.', 'error')
+        return redirect(url_for('main.forgot_password'))
+
+    if request.method == 'POST':
+        password = request.form.get('password', '')
+        confirm = request.form.get('confirm_password', '')
+
+        if not password or len(password) < 6:
+            flash('Password must be at least 6 characters.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+
+        if password != confirm:
+            flash('Passwords do not match.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+
+        if user.check_password(password):
+            flash('New password cannot be the same as your old password.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+
+        user.set_password(password)
+        # A password reset also implicitly verifies ownership of the email
+        user.email_verified = True
+        db.session.commit()
+
+        flash('Password reset successfully! You can now log in.', 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('reset_password.html', token=token)
+
+
+# ============================================================
+#  PASTE THESE NEW ROUTES INTO YOUR routes.py
+#  Add them AFTER your existing routes (before the last line)
+# ============================================================
+
+# --- 1. ADMIN DASHBOARD ---
+# Add this import at the TOP of routes.py (with the other imports):
+#   from sqlalchemy import func
+
+@main.route('/admin')
+@login_required
+def admin_dashboard():
+    ADMIN_EMAIL = 'legendofwinning002@gmail.com'
+
+    if current_user.email.strip().lower() != ADMIN_EMAIL.strip().lower():
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('main.home'))
+
+    from app.models import User, Attempt, Feedback
+    from sqlalchemy import func
+
+    total_users = User.query.count()
+    total_attempts = Attempt.query.count()
+    total_feedback = Feedback.query.count()
+
+    # Average rating (rounded to 1 decimal)
+    avg = db.session.query(func.avg(Feedback.rating)).scalar()
+    avg_rating = round(avg, 1) if avg else '—'
+
+    users = User.query.order_by(User.created_at.desc()).all()
+    feedback_list = Feedback.query.order_by(Feedback.timestamp.desc()).all()
+
+    return render_template('admin.html',
+                           total_users=total_users,
+                           total_attempts=total_attempts,
+                           total_feedback=total_feedback,
+                           avg_rating=avg_rating,
+                           users=users,
+                           feedback_list=feedback_list)
+
+
+# --- 2. CSV EXPORT ---
+# Add this import at the TOP of routes.py:
+#   import csv
+#   import io
+#   from flask import Response
+
+@main.route('/attempts/export')
+@login_required
+def export_attempts():
+    """Download all of the current user's attempts as a CSV file."""
+    from app.models import Attempt
+    import csv
+    import io
+
+    attempts = Attempt.query.filter_by(user_id=current_user.id) \
+        .order_by(Attempt.timestamp.desc()).all()
+
+    # Build CSV in memory
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['#', 'Type', 'Input', 'Result', 'Date'])
+
+    for i, a in enumerate(attempts, 1):
+        writer.writerow([
+            i,
+            a.input_type,
+            a.input_value,
+            a.result,
+            a.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+
+    # Return as downloadable CSV
+    response = Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={
+            'Content-Disposition': 'attachment; filename=armstrong_attempts.csv'
+        }
+    )
+    return response
