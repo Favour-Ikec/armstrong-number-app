@@ -108,6 +108,9 @@ def settings():
 
             new_password = request.form.get('new_password', '')
             if new_password:
+                if current_user.check_password(new_password):
+                    flash('New password cannot be the same as the current password.', 'error')
+                    return redirect(url_for('main.settings'))
                 current_user.set_password(new_password)
 
             db.session.commit()
@@ -213,9 +216,18 @@ def range_check():
 @main.route('/attempts')
 @login_required
 def attempts():
-    user_attempts = Attempt.query.filter_by(user_id=current_user.id)\
-                                  .order_by(Attempt.timestamp.desc()).all()
-    return render_template('attempts.html', attempts=user_attempts)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    pagination = Attempt.query.filter_by(user_id=current_user.id) \
+        .order_by(Attempt.timestamp.desc()) \
+        .paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template(
+        'attempts.html',
+        attempts=pagination.items,
+        pagination=pagination
+    )
 
 
 # ──────────────────────────────────────

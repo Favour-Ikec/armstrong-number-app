@@ -1,7 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -13,9 +16,8 @@ def create_app():
     app = Flask(__name__)
 
     # Configuration
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SECRET_KEY'] = 'change-this-to-a-random-secret-key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, '..', 'armstrong.db')
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-fallback-key')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Initialize extensions
