@@ -33,25 +33,24 @@
                     </div>
                 </form>
 
-                {% if result %}
-                <div class="mt-4 p-3 text-center" style="border-radius: var(--radius);
-                    {% if 'is an Armstrong' in result %}
-                        background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1px solid #a7f3d0;
-                    {% else %}
-                        background: var(--primary-light); border: 1px solid rgba(43, 57, 135, 0.15);
-                    {% endif %}">
-                    <div class="mb-2">
-                        {% if 'is an Armstrong' in result %}
-                            <i class="fas fa-check-circle fa-2x" style="color: #059669;"></i>
-                        {% else %}
-                            <i class="fas fa-times-circle fa-2x" style="color: var(--primary);"></i>
-                        {% endif %}
-                    </div>
-                    <h5 class="fw-bold mb-0"
-                        style="color: {% if 'is an Armstrong' in result %}#065f46{% else %}var(--primary){% endif %};">
-                        {{ result }}
-                    </h5>
-                </div>
+                
+           {% if result %}
+    {% if 'is an Armstrong' in result %}
+    <div class="mt-4 p-3 text-center result-success">
+    {% else %}
+    <div class="mt-4 p-3 text-center result-fail">
+    {% endif %}
+        <div class="mb-2">
+            {% if 'is an Armstrong' in result %}
+                <i class="fas fa-check-circle fa-2x" style="color: #059669;"></i>
+            {% else %}
+                <i class="fas fa-times-circle fa-2x" style="color: var(--primary);"></i>
+            {% endif %}
+        </div>
+        <h5 class="fw-bold mb-0 {% if 'is an Armstrong' in result %}text-armstrong{% else %}text-not-armstrong{% endif %}">
+            {{ result }}
+        </h5>
+    </div>
                 {% endif %}
             </div>
         </div>
