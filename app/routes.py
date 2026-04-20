@@ -395,14 +395,8 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
-# ============================================================
-#  PASTE THESE NEW ROUTES INTO YOUR routes.py
-#  Add them AFTER your existing routes (before the last line)
-# ============================================================
 
 # --- 1. ADMIN DASHBOARD ---
-# Add this import at the TOP of routes.py (with the other imports):
-#   from sqlalchemy import func
 
 @main.route('/admin')
 @login_required
@@ -437,10 +431,7 @@ def admin_dashboard():
 
 
 # --- 2. CSV EXPORT ---
-# Add this import at the TOP of routes.py:
-#   import csv
-#   import io
-#   from flask import Response
+
 
 @main.route('/attempts/export')
 @login_required
@@ -467,7 +458,6 @@ def export_attempts():
             a.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         ])
 
-    # Return as downloadable CSV
     response = Response(
         output.getvalue(),
         mimetype='text/csv',
