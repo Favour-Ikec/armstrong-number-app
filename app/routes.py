@@ -127,13 +127,6 @@ def settings():
             current_user.contact_number = request.form.get('contact_number', current_user.contact_number).strip()
             current_user.address = request.form.get('address', '').strip()
 
-            new_password = request.form.get('new_password', '')
-            if new_password:
-                if current_user.check_password(new_password):
-                    flash('New password cannot be the same as your old password.', 'error')
-                    return redirect(url_for('main.settings'))
-                current_user.set_password(new_password)
-
             db.session.commit()
             flash('Profile updated.', 'success')
 
@@ -143,6 +136,40 @@ def settings():
             logout_user()
             flash('Account deleted.', 'success')
             return redirect(url_for('main.home'))
+        
+        elif action == 'change_password':
+            current = request.form.get('current_password', '')
+            new = request.form.get('new_password', '')
+            confirm = request.form.get('confirm_password', '')
+
+            # Validation
+            if not current or not new or not confirm:
+                flash('All password fields are required', 'error')
+                return redirect(url_for('main.settings'))
+            
+            if not current_user.check_password(current):
+                flash('Current Password is incorrect', 'error')
+                return redirect(url_for('main.settings'))
+            
+            if new != confirm:
+                flash('Passwords do not match', 'error')
+                return redirect(url_for('main.settings'))
+            
+            if len(new) < 6:
+                flash('Password must be at least 6 characters.', 'error')
+                return redirect(url_for('main.settings'))
+
+            if current_user.check_password(new):
+                flash('New password cannot be the same as your old password.', 'error')
+                return redirect(url_for('main.settings'))
+            
+            # Update password
+            current_user.set_password(new)
+            db.session.commit()
+
+            logout_user()
+            flash('Password changed. Please log in again.', 'success')
+            return redirect(url_for('main.login'))
 
         return redirect(url_for('main.settings'))
 
@@ -395,14 +422,7 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
-# ============================================================
-#  PASTE THESE NEW ROUTES INTO YOUR routes.py
-#  Add them AFTER your existing routes (before the last line)
-# ============================================================
-
 # --- 1. ADMIN DASHBOARD ---
-# Add this import at the TOP of routes.py (with the other imports):
-#   from sqlalchemy import func
 
 @main.route('/admin')
 @login_required
@@ -437,10 +457,6 @@ def admin_dashboard():
 
 
 # --- 2. CSV EXPORT ---
-# Add this import at the TOP of routes.py:
-#   import csv
-#   import io
-#   from flask import Response
 
 @main.route('/attempts/export')
 @login_required

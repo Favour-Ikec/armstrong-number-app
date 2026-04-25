@@ -2,72 +2,85 @@
 {% block title %}Contact Us - Armstrong Number App{% endblock %}
 
 {% block content %}
-<div class="contact-wrapper">
-
-    <!-- Back -->
-    <a href="{{ url_for('main.home') }}" class="back-btn">
-        <i class="fas fa-arrow-left me-1"></i> Back
-    </a>
+<div class="contact-wrapper animate__animated animate__fadeIn">
 
     <!-- Header -->
-    <div class="text-center">
-        <div class="custom-badge"><i class="fas fa-comments me-1"></i> Get In Touch</div>
+    <div class="text-center mb-4">
+        <div class="custom-badge mb-2">
+            <i class="fas fa-comments me-1"></i> Get In Touch
+        </div>
         <h2 class="title">Contact Us</h2>
         <p class="subtitle">
-            Questions, feedback, or suggestions? We're here to help!
+            Questions, feedback, or suggestions? We're here to help.
         </p>
     </div>
 
-    <!-- Email Card -->
-    <div class="card email-card">
-        <div class="icon">
-            <i class="fas fa-envelope" style="color: var(--primary);"></i>
-        </div>
-        <div>
-            <h5 class="mb-1">Email Support</h5>
-            <a href="mailto:info@lehmaneducation.com" style="color: var(--accent);">
-                info@lehmaneducation.com
-            </a>
-        </div>
-    </div>
+    <!-- Grid -->
+    <div class="row g-3">
 
-    <!-- Response Time -->
-    <div class="card response-card">
-        <div class="icon">
-            <i class="fas fa-clock" style="color: var(--accent);"></i>
+        <!-- Email -->
+        <div class="col-md-6">
+            <div class="card email-card h-100">
+                <div class="icon">
+                    <i class="fas fa-envelope" style="color: var(--primary);"></i>
+                </div>
+                <div>
+                    <h5>Email Support</h5>
+                    <a href="mailto:info@lehmaneducation.com">
+                        info@lehmaneducation.com
+                    </a>
+                </div>
+            </div>
         </div>
-        <div>
-            <h5 class="mb-1">Response Time</h5>
-            <p class="mb-0 text-muted">24–48 hours for inquiries</p>
+
+        <!-- Response -->
+        <div class="col-md-6">
+            <div class="card response-card h-100">
+                <div class="icon">
+                    <i class="fas fa-clock" style="color: var(--accent);"></i>
+                </div>
+                <div>
+                    <h5>Response Time</h5>
+                    <p class="mb-0 text-muted">24-48 hours</p>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Info Boxes -->
-    <div class="info-grid">
-        <div class="info-box">
-            <i class="fas fa-globe-africa mb-2" style="font-size: 1.5rem; color: var(--primary);"></i><br>
-            <strong>Nigeria</strong>
+        <!-- Info Boxes -->
+        <div class="col-md-6">
+            <div class="info-box">
+                <i class="fas fa-globe-africa mb-2" style="color: var(--primary);"></i>
+                <p class="mb-0 fw-bold">Nigeria</p>
+            </div>
         </div>
-        <div class="info-box highlight">
-            <i class="fas fa-headset mb-2" style="font-size: 1.5rem;"></i><br>
-            <strong>24/7</strong><br>
-            Available
+
+        <div class="col-md-6">
+            <div class="info-box highlight">
+                <i class="fas fa-headset mb-2"></i>
+                <p class="mb-0">24/7 Support</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Team -->
-    <div class="team">
-        <h5><i class="fas fa-building me-2"></i>Lehman Educational Services</h5>
-        <p>Based in Lagos, Nigeria</p>
-    </div>
+        <!-- Team -->
+        <div class="col-12">
+            <div class="card p-3 text-center">
+                <h5 class="mb-1">
+                    <i class="fas fa-building me-2"></i>
+                    Lehman Educational Services
+                </h5>
+                <p class="text-muted mb-0">Based in Lagos, Nigeria</p>
+            </div>
+        </div>
 
-    <hr>
+        <!-- Support -->
+        <div class="col-12">
+            <div class="support-box">
+                <i class="fas fa-paper-plane mb-2"></i>
+                <h5>General Support</h5>
+                <p>Questions about the Armstrong Number application</p>
+            </div>
+        </div>
 
-    <!-- General Support -->
-    <div class="support-box">
-        <i class="fas fa-paper-plane" style="font-size: 1.8rem; color: var(--primary);"></i>
-        <h5>General Support</h5>
-        <p>Questions about the Armstrong Number application</p>
     </div>
 
 </div>

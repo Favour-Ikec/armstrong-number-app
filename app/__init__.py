@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, url_for, flash, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from dotenv import load_dotenv
 import os
+from sqlalchemy.exc import OperationalError
 
 load_dotenv()
 
@@ -25,6 +26,10 @@ def create_app():
         'sqlite:///' + os.path.join(basedir, '..', 'armstrong.db')
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+    }
 
     # Mail config (Gmail SMTP by default)
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
@@ -51,5 +56,12 @@ def create_app():
     with app.app_context():
         from app import models
         db.create_all()
+
+    @app.errorhandler(OperationalError)
+    def handle_db_error(e):
+        db.session.rollback()
+
+        flash('Connection issue. Please check your internet and try again.', 'error')
+        return request.referrer or (url_for('main.home'))
 
     return app
