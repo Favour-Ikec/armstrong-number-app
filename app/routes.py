@@ -9,7 +9,8 @@ from sqlalchemy import func
 from app.email_utils import (
     generate_token,
     verify_token,
-    send_verification_email,
+    send_otp_email,
+    verify_otp,
     send_password_reset_email,
 )
 
@@ -62,11 +63,11 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        # Send verification email
-        send_verification_email(user)
+        # Send OTP verification email
+        send_otp_email(user)
 
-        flash('Account created! Please check your email to verify your account.', 'success')
-        return redirect(url_for('main.verification_sent', email=email))
+        flash('Account created! Please check your email for your verification code.', 'success')
+        return redirect(url_for('main.verify_otp_page', email=email))
 
     return render_template('register.html')
 
@@ -88,10 +89,10 @@ def login():
             if not user.email_verified:
                 flash(
                     'Please verify your email before logging in. '
-                    'Check your inbox, or request a new verification link below.',
+                    'Check your inbox for your verification code.',
                     'error'
                 )
-                return redirect(url_for('main.verification_sent', email=user.email))
+                return redirect(url_for('main.verify_otp_page', email=user.email))
 
             login_user(user)
             flash('Logged in successfully!', 'success')
@@ -284,47 +285,54 @@ def feedback():
 
 
 # ──────────────────────────────────────
-# Email verification
+# OTP Email Verification
 # ──────────────────────────────────────
-@main.route('/verification-sent')
-def verification_sent():
+@main.route('/verify-otp', methods=['GET', 'POST'])
+def verify_otp_page():
+    """Show the OTP entry page (GET) or handle OTP submission (POST)."""
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        otp_code = request.form.get('otp_code', '').strip()
+
+        if not email or not otp_code:
+            flash('Please enter the verification code.', 'error')
+            return redirect(url_for('main.verify_otp_page', email=email))
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash('No account found for this email.', 'error')
+            return redirect(url_for('main.register'))
+
+        if user.email_verified:
+            flash('Your email is already verified. Please log in.', 'success')
+            return redirect(url_for('main.login'))
+
+        if verify_otp(user, otp_code):
+            user.email_verified = True
+            db.session.commit()
+            flash('Email verified successfully! You can now log in.', 'success')
+            return redirect(url_for('main.login'))
+        else:
+            flash('Invalid or expired code. Please try again or request a new one.', 'error')
+            return redirect(url_for('main.verify_otp_page', email=email))
+
+    # GET request — show the OTP entry form
     email = request.args.get('email', '')
-    return render_template('verification_sent.html', email=email)
+    return render_template('verify_otp.html', email=email)
 
 
-@main.route('/verify/<token>')
-def verify_email(token):
-    email = verify_token(token, salt='email-verify', max_age=3600)
-    if not email:
-        flash('Verification link is invalid or has expired. Please request a new one.', 'error')
-        return redirect(url_for('main.login'))
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('No account found for this email.', 'error')
-        return redirect(url_for('main.register'))
-
-    if user.email_verified:
-        flash('Your email is already verified. Please log in.', 'success')
-        return redirect(url_for('main.login'))
-
-    user.email_verified = True
-    db.session.commit()
-    flash('Email verified successfully! You can now log in.', 'success')
-    return redirect(url_for('main.login'))
-
-
-@main.route('/resend-verification', methods=['POST'])
-def resend_verification():
+@main.route('/resend-otp', methods=['POST'])
+def resend_otp():
+    """Resend a new OTP code."""
     email = request.form.get('email', '').strip()
     user = User.query.filter_by(email=email).first()
 
     # Always show the same message (don't leak whether an email is registered)
     if user and not user.email_verified:
-        send_verification_email(user)
+        send_otp_email(user)
 
-    flash('If an unverified account exists for that email, a new verification link has been sent.', 'success')
-    return redirect(url_for('main.verification_sent', email=email))
+    flash('If an unverified account exists for that email, a new verification code has been sent.', 'success')
+    return redirect(url_for('main.verify_otp_page', email=email))
 
 
 # ──────────────────────────────────────

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Poppins', Arial, sans-serif; background: #f5f6fb; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px; }
+        .otp-code { font-size: 36px; font-weight: 700; letter-spacing: 8px; color: #2B3987; background: linear-gradient(135deg, #f0f1ff, #fde68a); padding: 20px 30px; border-radius: 12px; display: inline-block; margin: 20px 0; }
+        h1 { color: #2B3987; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verify Your Email</h1>
+        <p>Hi <strong>{{ user.name }}</strong>,</p>
+        <p>Thanks for signing up for Armstrong Number App! Enter the code below in the app to verify your email address:</p>
+        <p style="text-align: center;">
+            <span class="otp-code">{{ otp_code }}</span>
+        </p>
+        <p style="font-size: 13px; color: #888;">This code expires in <strong>10 minutes</strong>. If you didn't create this account, you can ignore this email.</p>
+    </div>
+</body>
+</html>

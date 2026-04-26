@@ -19,6 +19,8 @@ class User(UserMixin, db.Model):
     address = db.Column(db.String(300), default='')
     email_verified = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    otp_code = db.Column(db.String(6), nullable=True)
+    otp_expires = db.Column(db.DateTime, nullable=True)
 
     # Relationships
     attempts = db.relationship('Attempt', backref='user', lazy=True, cascade='all, delete-orphan')
@@ -37,8 +39,8 @@ class User(UserMixin, db.Model):
 class Attempt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-    input_type = db.Column(db.String(10), nullable=False)  # 'single' or 'range'
-    input_value = db.Column(db.String(100), nullable=False)  # e.g. "153" or "1-1000"
+    input_type = db.Column(db.String(10), nullable=False)
+    input_value = db.Column(db.String(100), nullable=False)
     result = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -50,7 +52,7 @@ class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     message = db.Column(db.Text, nullable=False)
-    rating = db.Column(db.Integer, nullable=False)  # 1 to 5
+    rating = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

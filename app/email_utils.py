@@ -2,10 +2,12 @@
 Email utilities: token generation/verification + email sending helpers.
 Used for email verification on signup and forgot-password flow.
 """
+import random
+from datetime import datetime, timedelta
 from flask import current_app, render_template, url_for
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
-from app import mail
+from app import mail, db
 
 
 # ──────────────────────────────────────
@@ -48,27 +50,51 @@ def send_email(to, subject, html_body, text_body=None):
         return False
 
 
-def send_verification_email(user):
-    token = generate_token(user.email, salt='email-verify')
-    verify_url = url_for('main.verify_email', token=token, _external=True)
+def generate_otp():
+    """Generate a random 6-digit OTP code."""
+    return str(random.randint(100000, 999999))
+
+
+def send_otp_email(user):
+    """Generate an OTP, save it to the user, and send it via email."""
+    otp = generate_otp()
+    user.otp_code = otp
+    user.otp_expires = datetime.utcnow() + timedelta(minutes=10)
+    db.session.commit()
+
     html = render_template(
-        'emails/verify_email.html',
+        'emails/verify_otp.html',
         user=user,
-        verify_url=verify_url
+        otp_code=otp
     )
     text = (
         f"Hi {user.name},\n\n"
-        f"Please verify your email for the Armstrong Number App by visiting:\n"
-        f"{verify_url}\n\n"
-        f"This link expires in 1 hour.\n\n"
+        f"Your verification code for the Armstrong Number App is:\n\n"
+        f"{otp}\n\n"
+        f"This code expires in 10 minutes.\n\n"
         f"If you didn't create an account, you can ignore this email."
     )
     return send_email(
         user.email,
-        'Verify your email — Armstrong Number App',
+        'Your Verification Code — Armstrong Number App',
         html,
         text
     )
+
+
+def verify_otp(user, code):
+    """Check if the OTP code is correct and not expired. Returns True/False."""
+    if not user.otp_code or not user.otp_expires:
+        return False
+    if user.otp_code != code:
+        return False
+    if datetime.utcnow() > user.otp_expires:
+        return False
+    # OTP is valid — clear it so it can't be reused
+    user.otp_code = None
+    user.otp_expires = None
+    db.session.commit()
+    return True
 
 
 def send_password_reset_email(user):
