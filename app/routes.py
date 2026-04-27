@@ -243,35 +243,35 @@ def settings():
 
         # ───── CHANGE PASSWORD ─────
         elif action == "change_password":
-            current = request.form.get("current_password", "")
-            new = request.form.get("new_password", "")
-            confirm = request.form.get("confirm_password", "")
+            current_pw = request.form.get("current_password", "")
+            new_pw = request.form.get("new_password", "")
+            confirm_pw = request.form.get("confirm_password", "")
 
-            errors = {}
+            if not current_pw or not new_pw or not confirm_pw:
+                flash("All password fields are required.", "error")
+                return redirect(url_for("main.settings"))
 
-            if not current or not new or not confirm:
-                errors["general"] = "All password fields are required."
+            if not current_user.check_password(current_pw):
+                flash("Incorrect current password.", "error")
+                return redirect(url_for("main.settings"))
 
-            elif not current_user.check_password(current):
-                errors["current_password"] = "Incorrect current password."
+            if new_pw != confirm_pw:
+                flash("New passwords do not match.", "error")
+                return redirect(url_for("main.settings"))
 
-            elif new != confirm:
-                errors["confirm_password"] = "Passwords do not match."
+            if len(new_pw) < 6:
+                flash("New password must be at least 6 characters.", "error")
+                return redirect(url_for("main.settings"))
 
-            elif len(new) < 6:
-                errors["new_password"] = "Must be at least 6 characters."
+            if current_user.check_password(new_pw):
+                flash("New password cannot be the same as your current password.", "error")
+                return redirect(url_for("main.settings"))
 
-            elif current_user.check_password(new):
-                errors["new_password"] = "Cannot reuse old password."
-
-            if errors:
-                return render_template("settings.html", errors=errors)
-
-            current_user.set_password(new)
+            current_user.set_password(new_pw)
             db.session.commit()
 
             logout_user()
-            flash("Password changed. Please log in again.", "success")
+            flash("Password changed successfully. Please log in again.", "success")
             return redirect(url_for("main.login"))
 
         return redirect(url_for("main.settings"))
