@@ -15,20 +15,49 @@
         <div class="card">
             <div class="card-body p-4">
                 <form method="POST" id="registerForm">
+
+                    {% if errors and errors.get('general') %}
+                    <div class="alert alert-danger">
+                        {{ errors.get('general') }}
+                    </div>
+                    {% endif %}
+
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="name" class="form-label">
                                 <i class="fas fa-id-card me-1" style="color: var(--accent);"></i> Full Name
                             </label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                   placeholder="John Doe" required>
+                            <input type="text"
+                                class="form-control {% if errors and errors.get('name') %}is-invalid{% endif %}"
+                                id="name"
+                                name="name"
+                                value="{{ name or '' }}"
+                                placeholder="John Doe"
+                                required>
+
+                            {% if errors and errors.get('name') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('name') }}
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="col-md-6">
                             <label for="username" class="form-label">
                                 <i class="fas fa-at me-1" style="color: var(--accent);"></i> Username
                             </label>
-                            <input type="text" class="form-control" id="username" name="username"
-                                   placeholder="johndoe" required>
+                            <input type="text"
+                                class="form-control {% if errors and errors.get('username') %}is-invalid{% endif %}"
+                                id="username"
+                                name="username"
+                                value="{{ username or '' }}"
+                                placeholder="johndoe"
+                                required>
+
+                            {% if errors and errors.get('username') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('username') }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -37,16 +66,38 @@
                             <label for="email" class="form-label">
                                 <i class="fas fa-envelope me-1" style="color: var(--accent);"></i> Email
                             </label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                   placeholder="john@example.com" required>
+                            <input type="email"
+                                class="form-control {% if errors and errors.get('email') %}is-invalid{% endif %}"
+                                id="email"
+                                name="email"
+                                value="{{ email or '' }}"
+                                placeholder="john@example.com"
+                                required>
+
+                            {% if errors and errors.get('email') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('email') }}
+                            </div>
+                            {% endif %}
                             <div class="invalid-feedback">Please enter a valid email address.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="contact_number" class="form-label">
                                 <i class="fas fa-phone me-1" style="color: var(--accent);"></i> Phone
                             </label>
-                            <input type="tel" class="form-control" id="contact_number" name="contact_number"
-                                   placeholder="+234 800 000 0000" required>
+                            <input type="tel"
+                                class="form-control {% if errors and errors.get('contact_number') %}is-invalid{% endif %}"
+                                id="contact_number"
+                                name="contact_number"
+                                value="{{ contact_number or '' }}"
+                                placeholder="+234 800 000 0000"
+                                required>
+
+                            {% if errors and errors.get('contact_number') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('contact_number') }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -55,15 +106,34 @@
                             <label for="password" class="form-label">
                                 <i class="fas fa-lock me-1" style="color: var(--accent);"></i> Password
                             </label>
-                            <input type="password" class="form-control" id="password" name="password"
-                                   placeholder="Min. 6 characters" minlength="6" required>
+                            <input type="password"
+                                class="form-control {% if errors and errors.get('password') %}is-invalid{% endif %}"
+                                id="password"
+                                name="password"
+                                minlength="6"
+                                required>
+
+                            {% if errors and errors.get('password') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('password') }}
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="col-md-6">
                             <label for="confirm_password" class="form-label">
                                 <i class="fas fa-lock me-1" style="color: var(--accent);"></i> Confirm
                             </label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
-                                   placeholder="Repeat password" required>
+                            <input type="password"
+                                class="form-control {% if errors and errors.get('confirm_password') %}is-invalid{% endif %}"
+                                id="confirm_password"
+                                name="confirm_password"
+                                required>
+
+                            {% if errors and errors.get('confirm_password') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('confirm_password') }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -91,7 +161,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
 
     if (password !== confirm) {
         e.preventDefault();
-        alert('Passwords do not match.');
+        confirmInput.classList.add('is-invalid');
         return;
     }
 

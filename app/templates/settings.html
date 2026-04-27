@@ -35,8 +35,17 @@
                             <label for="email" class="form-label">
                                 <i class="fas fa-envelope me-1" style="color: var(--accent);"></i> Email
                             </label>
-                            <input type="email" class="form-control" id="email" name="email"
+                            <input type="email"
+                                class="form-control {% if errors and errors.get('email') %}is-invalid{% endif %}"
+                                id="email"
+                                name="email"
                                 value="{{ current_user.email }}">
+
+                            {% if errors and errors.get('email') %}
+                            <div class="invalid-feedback">
+                                {{ errors.get('email') }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 

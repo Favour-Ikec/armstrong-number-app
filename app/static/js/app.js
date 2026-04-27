@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    if (window.FLASH_MESSAGES) {
+        window.FLASH_MESSAGES.forEach(([category, message]) => {
+            const type = category === "error" ? "error" : category;
+            showToast(message, type);
+        });
+    }
+
     document.querySelectorAll("form").forEach(form => {
         if (form.id === "deleteAccountForm") return;
 
@@ -8,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!navigator.onLine) {
                 e.preventDefault();
                 showToast("You're offline. Cannot submit right now.", "error");
+                return;
             }
 
             const btn = this.querySelector("button[type='submit']");
@@ -22,15 +30,17 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.innerHTML = `<span class="spinner me-2"></span> ${text}`;
             btn.disabled = true;
 
-            // ⬇️ ADD DELAY LOGIC HERE
+            // Delay without breaking submission
             const start = Date.now();
             const minTime = 500;
 
-            e.preventDefault(); // temporarily stop form
+            if (minTime > 0) {
+                e.preventDefault();
 
-            setTimeout(() => {
-                form.submit(); // now submit after delay
-            }, Math.max(0, minTime - (Date.now() - start)));
+                setTimeout(() => {
+                    this.submit(); // safe submit
+                }, Math.max(0, minTime - (Date.now() - start)));
+            }
         });
 
     });
@@ -94,8 +104,9 @@ function showToast(message, type = "error") {
     container.appendChild(toast);
 
     setTimeout(() => {
-        toast.remove();
-    }, 4000);
+        toast.classList.add("hide");
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
 }
 
 function showConfirm(message, onConfirm) {

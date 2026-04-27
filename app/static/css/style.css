@@ -960,12 +960,15 @@ hr {
 .toast-container {
     position: fixed;
     top: 80px; /* below navbar */
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 9999;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10px;
-    width: 300px;
+    width: auto;
+    max-width: 90%;
 }
 
 .toast-message {
@@ -975,6 +978,12 @@ hr {
     font-weight: 500;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     animation: fadeSlideIn 0.3s ease;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.toast-message.hide {
+    opacity: 0;
 }
 
 .toast-success {
