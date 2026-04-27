@@ -85,14 +85,6 @@ def login():
 
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
-            if not user.email_verified:
-                flash(
-                    'Please verify your email before logging in. '
-                    'Check your inbox, or request a new verification link below.',
-                    'error'
-                )
-                return redirect(url_for('main.verification_sent', email=user.email))
-
             login_user(user)
             flash('Logged in successfully!', 'success')
             next_page = request.args.get('next')
