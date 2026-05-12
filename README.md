@@ -1,151 +1,163 @@
-# Armstrong Number Web App
+# Armstrong Number App
 
-A full-stack web application for checking and finding Armstrong (Narcissistic) numbers, built with Flask and PostgreSQL.
-
-**eProject — Aptech Semester 4**
-
----
+A full-stack web application for checking and finding Armstrong (Narcissistic) numbers, built with Flask and SQLite/PostgreSQL. This is an eProject for Aptech Semester 4 & 5.
 
 ## What is an Armstrong Number?
 
-An Armstrong number (also known as a Narcissistic number) is a number that equals the sum of its own digits, each raised to the power of the number of digits.
+An Armstrong number (also called a Narcissistic number) is a number that equals the sum of its digits, each raised to the power of the total number of digits.
 
-**Example:** 153 is an Armstrong number because it has 3 digits, and:
-1³ + 5³ + 3³ = 1 + 125 + 27 = 153
----
+**Example:** 153 is an Armstrong number because:
+```
+153 = 1³ + 5³ + 3³ = 1 + 125 + 27 = 153
+```
 
 ## Features
 
-- **User Registration & Login** — Secure authentication with password hashing (Werkzeug)
-- **OTP Email Verification** — 6-digit code sent via email on signup (expires in 10 minutes)
-- **Forgot Password** — Password reset via secure email link (expires in 1 hour)
+- **User Authentication** — Registration and login with secure password hashing (Werkzeug)
+- **Email OTP Verification** — Optional 6-digit OTP sent via Gmail SMTP (works without email config too — see Setup)
+- **Forgot Password** — Token-based password reset via email
 - **Single Number Check** — Enter any number to check if it's an Armstrong number
-- **Range Search** — Find all Armstrong numbers within a given range (up to 1,000,000)
-- **Attempts History** — View and export (CSV) all past checks
-- **User Settings** — Update profile, change password (prevents reuse of old password), delete account
-- **Feedback System** — Submit feedback with a 1–5 star rating
-- **Admin Dashboard** — View all users, total attempts, feedback, and average rating
-- **Contact Us** — Static contact information page
-
----
+- **Range Search** — Find all Armstrong numbers within a range (up to 1,000,000)
+- **Attempts History** — View past checks with pagination and CSV export
+- **User Settings** — Update profile, change password, delete account
+- **Feedback System** — 1–5 star rating with message
+- **Admin Dashboard** — View all users, attempts, and feedback (admin only)
+- **Contact Page** — Static contact information
 
 ## Tech Stack
 
-| Layer      | Technology                          |
-|------------|-------------------------------------|
-| Backend    | Python 3, Flask, Flask-SQLAlchemy   |
-| Database   | PostgreSQL (Supabase) / SQLite      |
-| Auth       | Flask-Login, Werkzeug               |
-| Email      | Flask-Mail (Gmail SMTP)             |
-| Frontend   | Jinja2, Bootstrap 5, Font Awesome   |
-| Deployment | GitHub                              |
-
----
+- **Backend:** Python 3, Flask
+- **Database:** SQLite (default) / PostgreSQL (via Supabase)
+- **ORM:** Flask-SQLAlchemy
+- **Auth:** Flask-Login
+- **Email:** Flask-Mail (optional)
+- **Templates:** Jinja2
+- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
 
 ## Getting Started
 
-### 1. Clone the repository
+### Prerequisites
 
-```bash
-git clone https://github.com/Favour-Ikec/armstrong-number-app.git
-cd armstrong-number-app
-```
+- Python 3.10 or higher
+- pip (Python package manager)
+- Git
 
-### 2. Create a virtual environment
+### Installation
 
-**Mac/Linux:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Favour-Ikec/armstrong-number-app.git
+   cd armstrong-number-app
+   ```
 
-**Windows:**
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
+2. **Create and activate a virtual environment:**
+   ```bash
+   python3 -m venv venv
 
-### 3. Install dependencies
+   # macOS / Linux
+   source venv/bin/activate
 
-```bash
-pip install -r requirements.txt
-```
+   # Windows (PowerShell)
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+   .\venv\Scripts\Activate.ps1
+   ```
 
-### 4. Create a `.env` file
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Create a file called `.env` in the root of the project with the following variables:
+4. **Run the application:**
+   ```bash
+   python run.py
+   ```
+
+5. **Open in your browser:**
+   ```
+   http://127.0.0.1:5000
+   ```
+
+The app uses SQLite by default, so no database setup is needed. You can register an account and start using the app immediately.
+
+### Email Configuration (Optional)
+
+Email OTP verification is **optional**. Without it, users are auto-verified on registration and can log in directly. To enable email verification, create a `.env` file in the project root:
+
+```env
 SECRET_KEY=your-secret-key-here
-DATABASE_URL=your-database-url-here
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=465
-MAIL_USE_TLS=False
 MAIL_USE_SSL=True
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_DEFAULT_SENDER=your-email@gmail.com
-
-> **Note:** If you don't have a PostgreSQL database, you can leave out the `DATABASE_URL` line and the app will automatically use a local SQLite database.
-
-> **Gmail App Password:** To send emails, you need a Gmail App Password. Go to your Google Account → Security → 2-Step Verification → App Passwords, and generate one.
-
-### 5. Run the application
-
-```bash
-python run.py
+MAIL_USE_TLS=False
+MAIL_USERNAME=your-gmail@gmail.com
+MAIL_PASSWORD=your-gmail-app-password
+MAIL_DEFAULT_SENDER=your-gmail@gmail.com
 ```
 
-### 6. Open in your browser
-http://127.0.0.1:5000
----
+**Note:** For `MAIL_PASSWORD`, you need a [Google App Password](https://myaccount.google.com/apppasswords), not your regular Gmail password. This requires 2-Step Verification to be enabled on your Google account.
+
+### Using PostgreSQL (Optional)
+
+To use PostgreSQL instead of SQLite, add this to your `.env` file:
+
+```env
+DATABASE_URL=postgresql://user:password@host:port/database
+```
 
 ## Project Structure
+
+```
 armstrong-number-app/
 ├── app/
-│   ├── init.py          # App factory, config, extensions
+│   ├── __init__.py          # App factory, config, extensions
 │   ├── models.py            # User, Attempt, Feedback models
-│   ├── routes.py            # All routes and business logic
+│   ├── routes.py            # All route handlers
 │   ├── email_utils.py       # OTP generation, email sending, token helpers
 │   ├── static/
 │   │   ├── css/
+│   │   │   └── style.css    # Custom styles
 │   │   ├── js/
-│   │   └── images/
+│   │   │   └── app.js       # Client-side JavaScript
+│   │   └── images/          # SVG illustrations
 │   └── templates/
-│       ├── base.html
-│       ├── home.html
-│       ├── register.html
-│       ├── login.html
-│       ├── verify_otp.html
-│       ├── check.html
-│       ├── range.html
-│       ├── attempts.html
-│       ├── settings.html
-│       ├── feedback.html
-│       ├── contact.html
-│       ├── admin.html
+│       ├── base.html         # Base layout template
+│       ├── home.html         # Landing page
+│       ├── login.html        # Login form
+│       ├── register.html     # Registration form
+│       ├── verify_otp.html   # OTP verification page
+│       ├── check.html        # Single number checker
+│       ├── range.html        # Range search
+│       ├── attempts.html     # Attempts history
+│       ├── settings.html     # User settings
+│       ├── feedback.html     # Feedback form
+│       ├── contact.html      # Contact page
+│       ├── admin.html        # Admin dashboard
 │       ├── forgot_password.html
 │       ├── reset_password.html
-│       └── emails/
+│       └── emails/           # Email templates
 │           ├── verify_otp.html
 │           └── reset_password.html
-├── .env                     # Environment variables (not in repo)
+├── run.py                    # Entry point
+├── requirements.txt          # Python dependencies
 ├── .gitignore
-├── requirements.txt
-├── run.py                   # Entry point
 └── README.md
-
----
+```
 
 ## Team
 
-| Name | Student ID | Responsibilities |
-|------|-----------|-----------------|
-| Favour Ikechukwu Agugbue | Student1649583 | Flask setup, Armstrong logic, OTP verification, demo video |
-| Samuel Tofunmi Oyegbola | Student1649578 | Authentication, registration, login, settings |
-| Miracle Chidiebere Richard | Student1649574 | Attempts history, home page, UI/UX styling |
-| Mohammed Abdulmalik | Student1649569 | Contact page, feedback system, report coordination |
+| Name | Student ID | Role |
+|------|-----------|------|
+| Favour Ikechukwu Agugbue | 1649583 | Lead Developer — Backend, authentication, email system, admin dashboard |
+| Samuel Tofunmi Oyegbola | 1607440 | Frontend — Templates, UI/UX, styling |
+| Miracle Chidiebere Richard | 1626476 | Features — Armstrong logic, range search, attempts history |
+| Mohammed Abdulmalik | 1528140 | Testing & Documentation — QA, project report |
 
----
+## Submission
 
-## Submission Deadline
+- **Project:** Python/R — Armstrong Number
+- **Start Date:** 6 April 2026
+- **Deadline:** 27 April 2026
 
-**27 April 2026**
+## License
+
+This project was built as an academic eProject for Aptech Computer Education.
