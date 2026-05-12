@@ -209,3 +209,7 @@ __marimo__/
 
 .DS_Store
 armstrong.db
+.env
+.env.save
+.env.backup
+armstrong.db

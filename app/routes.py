@@ -13,6 +13,7 @@ from app.email_utils import (
     send_otp_email,
     verify_otp,
     send_password_reset_email,
+    mail_is_configured,
 )
 
 main = Blueprint("main", __name__)
@@ -132,11 +133,16 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        # Send OTP verification email
-        send_otp_email(user)
-
-        flash('Account created! Please check your email for your verification code.', 'success')
-        return redirect(url_for('main.verify_otp_page', email=email))
+        # If email is configured, send OTP; otherwise auto-verify
+        if mail_is_configured():
+            send_otp_email(user)
+            flash('Account created! Please check your email for your verification code.', 'success')
+            return redirect(url_for('main.verify_otp_page', email=email))
+        else:
+            user.email_verified = True
+            db.session.commit()
+            flash('Account created! You can now log in.', 'success')
+            return redirect(url_for('main.login'))
 
     return render_template("register.html")
 
@@ -165,12 +171,18 @@ def login():
 
         # Check email verification before logging in
         if not user.email_verified:
-            flash(
-                'Please verify your email before logging in. '
-                'Check your inbox for your verification code.',
-                'error'
-            )
-            return redirect(url_for('main.verify_otp_page', email=user.email))
+            if mail_is_configured():
+                send_otp_email(user)
+                flash(
+                    'Please verify your email before logging in. '
+                    'A new verification code has been sent.',
+                    'error'
+                )
+                return redirect(url_for('main.verify_otp_page', email=user.email))
+            else:
+                # No mail configured — auto-verify and proceed
+                user.email_verified = True
+                db.session.commit()
 
         login_user(user)
 

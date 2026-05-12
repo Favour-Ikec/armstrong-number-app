@@ -11,6 +11,15 @@ from app import mail, db
 
 
 # ──────────────────────────────────────
+# Mail configuration check
+# ──────────────────────────────────────
+def mail_is_configured():
+    """Check whether SMTP credentials are present."""
+    username = current_app.config.get('MAIL_USERNAME')
+    return bool(username)
+
+
+# ──────────────────────────────────────
 # Token helpers (signed + time-limited)
 # ──────────────────────────────────────
 def _serializer():
